@@ -1,5 +1,6 @@
 
 import { observe } from './observer/index' // index 不能省略
+import { proxy } from './util/index'
 export function initState (vm) {
     const opts = vm.$options;
     if (opts.props) {
@@ -23,6 +24,10 @@ export function initState (vm) {
     function initData (vm) {
         let data = vm.$options.data
         data = vm._data = typeof data === 'function' ? data.call(vm) : data
+        // 用户直接 vm.name 需要代理到 vm._data.name
+        for (let key in data) {
+            proxy(vm, '_data', key)
+        }
         observe(data)
     }
     function initComputed () { }
