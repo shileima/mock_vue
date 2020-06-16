@@ -32,4 +32,5 @@ let objTest = observerProxy(obj)
 
 // console.log(objTest)
 // objTest.name = 'loading'
-objTest.flag.interest.push('打豆豆')
+objTest.flag.book.name = 'ts'
+// objTest.flag.interest.push('打豆豆')
