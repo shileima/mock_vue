@@ -1,17 +1,20 @@
-export function patch (oldVnode, vnode) {
-    console.log(oldVnode, vnode)
+export function patch(oldVnode, vnode) {
+    // console.log(oldVnode, vnode)
     // 判断是更新还是渲染
+    // console.log(oldVnode, 'oldVnode')
     const isRealElement = oldVnode.nodeType
+    let el;
     if (isRealElement) {
         const oldEle = oldVnode  // id="app"
         const parentEle = oldEle.parentNode
         // 创建一个新的元素来替换原来老元素
-        let el = createEle(vnode)
+        el = createEle(vnode)
         parentEle.insertBefore(el, oldEle.nextSibling)
         parentEle.removeChild(oldEle)
     }
+    return el
 }
-function createEle (vnode) { // 根据虚拟节点创建真实节点
+function createEle(vnode) { // 根据虚拟节点创建真实节点
     let { tag, children, key, data, text } = vnode
     // 是标签创建标签
     if (typeof tag === 'string') {
@@ -27,7 +30,7 @@ function createEle (vnode) { // 根据虚拟节点创建真实节点
     // console.log(vnode.el)
     return vnode.el
 }
-function updateProperties (vnode) {
+function updateProperties(vnode) {
     let newProps = vnode.data
     let el = vnode.el
     // console.log(el, newProps)

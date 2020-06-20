@@ -1,5 +1,5 @@
 import { createElement, createTextNode } from './vdom/create-element'
-export function renderMixin (Vue) {
+export function renderMixin(Vue) {
     // _c 创建元素的虚拟节点
     // _v 创建文本的虚拟节点
     // _s JSON。stringify
@@ -14,10 +14,10 @@ export function renderMixin (Vue) {
         return val === null ? '' : (typeof val === 'object' ? JSON.stringify(val) : ' ' + val + ' ')
     }
     Vue.prototype._render = function () {
-        console.log('_render')
+        // console.log('_render')
         const vm = this
         const { render } = vm.$options
-        console.log(render)
+        // console.log(render)
         let vnode = render.call(vm)
         return vnode
     }

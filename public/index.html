@@ -13,14 +13,63 @@
     </div>
     <script src="/dist/umd/vue.js"></script>
     <script>
+
+        // Vue.mixin({
+        //     a: { a: 1 },
+        //     b: 2,
+        //     created() {
+        //         console.log('created mixin 1');
+        //     },
+        //     beforeCreate() {
+        //         console.log('beforeCreate mixin 1');
+        //     },
+        //     beforeMounte() {
+        //         console.log('beforeMounte mixin 1');
+        //     },
+        // })
+
+        // Vue.mixin({
+        //     a: { a: 2, b: 2 },
+        //     c: 3,
+        //     created() {
+        //         console.log('created mixin 2');
+        //     },
+        //     beforeCreate() {
+        //         console.log('beforeCreate mixin 2');
+        //     },
+        //     mounted() {
+        //         console.log('mounted mixin 2');
+        //     }
+        // })
+
         let vm = new Vue({
             el: '#app',
             data() {
                 // return { name: [{ a: 1 }, { b: 2 }] }
                 return { name: 'loading', age: 30 }
             }
+            // created() {
+            //     console.log('created');
+            // },
+            // beforeCreate() {
+            //     console.log('beforeCreate');
+            // },
+            // beforeMount() {
+            //     console.log('beforeMounte');
+            // },
+            // mounted() {
+            //     console.log('mounted');
+            // }
         })
-        // vm.name = 'msl'
+
+        setTimeout(() => {
+            vm.name = 'loading 1'
+            vm.name = 'loading 2'
+            vm.name = 'mashilei'
+            // vue 中的异步更新策略
+        }, 1000);
+        // console.log(vm.name, 'name')
+        // vm._update(vm._render())
         // console.log(vm.name, vm.age)
         // 数据劫持
         /* vm._data.name.push({ c: 3 })

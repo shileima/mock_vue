@@ -13,7 +13,7 @@ const methods = [
 ]
 methods.forEach(method => {
     arrayMethods[method] = function (...args) {
-        console.log('用户调用了' + method)
+        // console.log('用户调用了' + method)
         const result = oldArrayMethods[method].apply(this, args)
         // 添加元素可能还是一个对象继续监控
         let inserted;

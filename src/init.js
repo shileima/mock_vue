@@ -1,12 +1,19 @@
 import { initState } from './state'
-import { compileToFunction } from './compiler/index.js';
-import { mountComponent } from './lifecycle'
-export function initMixin (Vue) {
+import { compileToFunction } from './compiler/index';
+import { mountComponent, callHooks } from './lifecycle'
+import { mergeOptions } from './util/index'
+
+export function initMixin(Vue) {
     Vue.prototype._init = function (options) {
         const vm = this;
-        vm.$options = options;
+        vm.$options = mergeOptions(vm.constructor.options, options);
+        console.log(vm.$options, 'vm.$options');
+        // 调用 beforeCreate hook
+        callHooks(vm, 'beforeCreate')
         // 初始化状态
         initState(vm)
+        // 调用 created
+        callHooks(vm, 'created')
 
         // 如果用户配置了 el 就要实现挂载
         if (vm.$options.el) {
@@ -17,7 +24,7 @@ export function initMixin (Vue) {
         // 渲染顺序 render > template > el
         const vm = this
         const options = vm.$options
-        el = document.querySelector(el)
+        el = vm.$el = document.querySelector(el)
         if (!options.render) {
             let template = options.template
             if (!template && el) {

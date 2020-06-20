@@ -2,8 +2,8 @@ import { parseHTML } from './parser-html.js'
 
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g
 
-function genProps (attrs) {
-    console.log(attrs)
+function genProps(attrs) {
+    // console.log(attrs)
     let str = ''
     for (let i = 0; i < attrs.length; i++) {
         let attr = attrs[i]
@@ -20,7 +20,7 @@ function genProps (attrs) {
     }
     return `{${str.slice(0, -1)}}`
 }
-function genChildren (el) {
+function genChildren(el) {
     const children = el.children
     if (children && children.length > 0) {
         return `${children.map(c => gen(c)).join(',')}`
@@ -28,7 +28,7 @@ function genChildren (el) {
         return false
     }
 }
-function gen (node) {
+function gen(node) {
     if (node.type == 1) {
         return generate(node)
     } else {
@@ -50,7 +50,7 @@ function gen (node) {
         return `_v(${tokens.join('+')})`
     }
 }
-function generate (el) {
+function generate(el) {
     const children = genChildren(el)
     let code = `_c("${el.tag}", ${
         el.attrs.length ? genProps(el.attrs) : 'undefined'
@@ -60,7 +60,7 @@ function generate (el) {
     `
     return code
 }
-export function compileToFunction (template) {
+export function compileToFunction(template) {
     // 解析 html字符串，将 html字符串 => ast 语法书
     let root = parseHTML(template)
     // console.log(root, 'root')
