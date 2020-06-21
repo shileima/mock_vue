@@ -1,12 +1,13 @@
 let has = {} // 用对象实现去重
 let queue = []
-let pending = false
 
 function flushSchedualQueue() {
     for (let i = 0; i < queue.length; i++) {
         let watcher = queue[i]
         watcher.run()
     }
+    queue = [];
+    has = {}
 }
 
 export function queueWatcher(watcher) {
@@ -15,11 +16,25 @@ export function queueWatcher(watcher) {
     if (has[id] == null) {
         has[id] = true  // 记录是否注册过这个 watcher
         queue.push(watcher)
+        // 异步清空队列, flushSchedualQueue 调用渲染 watcher
+        nextTick(flushSchedualQueue);
+    }
+}
 
-        if (!pending) {  // 更新时，没有刷新队列条件下，异步开始刷新队列
+// nextTick
+let callbacks = []
+let pending = false
+function flushCallbacksQueue() {
+    callbacks.forEach(fn => fn())
+    pending = false
+}
+export function nextTick(fn) {
+    callbacks.push(fn)
 
-            setTimeout(flushSchedualQueue, 0);
-            pending = true  // 正在刷新中...
-        }
+    if (!pending) {  // 更新时，没有刷新队列条件下，异步开始刷新队列
+        setTimeout(() => {
+            flushCallbacksQueue()
+        }, 0);
+        pending = true  // 正在刷新中...
     }
 }

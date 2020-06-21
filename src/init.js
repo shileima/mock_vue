@@ -2,8 +2,10 @@ import { initState } from './state'
 import { compileToFunction } from './compiler/index';
 import { mountComponent, callHooks } from './lifecycle'
 import { mergeOptions } from './util/index'
+import { nextTick } from './observer/schedual';
 
 export function initMixin(Vue) {
+    Vue.prototype.$nextTick = nextTick
     Vue.prototype._init = function (options) {
         const vm = this;
         vm.$options = mergeOptions(vm.constructor.options, options);
