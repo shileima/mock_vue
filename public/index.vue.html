@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue类库</title>
+</head>
+
+<body>
+    <div id="app" style="color: red;font-size: 14px;" class="title">
+        <p>a {{name}} b {{age}} c</p>world
+    </div>
+    <script src="/dist/umd/vue.js"></script>
+    <script>
+
+        Vue.mixin({
+            // a: { a: 1 },
+            // b: 2,
+            // created() {
+            //     console.log('created mixin 1');
+            // },
+            // beforeCreate() {
+            //     console.log('beforeCreate mixin 1');
+            // },
+            // beforeMounte() {
+            //     console.log('beforeMounte mixin 1');
+            // }
+        })
+
+        Vue.mixin({
+            //     a: { a: 2, b: 2 },
+            //     c: 3,
+            //     created() {
+            //         console.log('created mixin 2');
+            //     },
+            //     beforeCreate() {
+            //         console.log('beforeCreate mixin 2');
+            //     },
+            //     mounted() {
+            //         console.log('mounted mixin 2');
+            //     }
+        })
+
+        let vm = new Vue({
+            el: '#app',
+            data() {
+                // return { name: [{ a: 1 }, { b: 2 }] }
+                return { name: 'loading', age: 30 }
+            }
+            // created() {
+            //     console.log('created');
+            // },
+            // beforeCreate() {
+            //     console.log('beforeCreate');
+            // },
+            // beforeMount() {
+            //     console.log('beforeMounte');
+            // },
+            // mounted() {
+            //     console.log('mounted');
+            // }
+        })
+
+        setTimeout(() => {
+            vm.name = 'loading 1'
+            vm.name = 'loading 2'
+            vm.name = 'mashilei'
+            // vue 中的异步更新策略
+            console.log(app.innerHTML, 1); // 由于是异步更新策略，更新之前获取的旧html内容
+            vm.$nextTick(() => {
+                console.log(app.innerHTML, 2);  // 异步更新后，html变成了新节点
+            })
+
+        }, 1000);
+        // console.log(vm.name, 'name')
+        // vm._update(vm._render())
+        // console.log(vm.name, vm.age)
+        // 数据劫持
+        /* vm._data.name.push({ c: 3 })
+        vm._data.name[2].c = 300
+        console.log(vm._data.name, 8888) */
+    </script>
+</body>
+
+</html>

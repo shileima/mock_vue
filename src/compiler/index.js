@@ -61,9 +61,9 @@ function generate(el) {
     return code
 }
 export function compileToFunction(template) {
+
     // 解析 html字符串，将 html字符串 => ast 语法书
     let root = parseHTML(template)
-    // console.log(root, 'root')
     // 将 ast 语法树再次转换成 js 语法
     // _c("div",{id:"app"},_c("p",undefined,_v("hello", + _s(name))),_v("hello"))
     let code = generate(root)

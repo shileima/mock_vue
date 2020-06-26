@@ -5,51 +5,63 @@ const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`); // 匹配标签结尾�
 const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/; // 匹配属性的
 const startTagClose = /^\s*(\/?)>/; // 匹配标签结束的 >  <div>
 
-let root = null // ast 语法书的树根
-let currentParent; // 标示当前父亲是谁
-let stack = []
 const ELEMENT_TYPE = 1
 const TEXT_TYPE = 3
-function createASTElement(tagName, attrs) {
-    return {
-        tag: tagName,
-        type: ELEMENT_TYPE,
-        children: [],
-        attrs,
-        parent: null
-    }
-}
-function start(tagName, attrs) {
-    // console.log('标签是' + tagName + '属性是：' + attrs)
-    let element = createASTElement(tagName, attrs)
-    if (!root) {
-        root = element
-    }
-    currentParent = element // 吧当前元素标记为父 ast 树
-    stack.push(element) // 将开始标签存放到栈中
-}
-function chars(text) {
-    // console.log('文本是', text)
-    text = text.replace(/\s/g, '')
-    if (text) {
-        currentParent.children.push({
-            text,
-            type: TEXT_TYPE
-        })
-    }
-}
-function end(endTag) {
-    // console.log('结束标签：', endTag)
-    const element = stack.pop()
-    currentParent = stack[stack.length - 1]
-    if (currentParent) {
-        element.parent = currentParent
-        currentParent.children.push(element)
-        // console.log(currentParent, 'currentParent')
-        // console.log(element, 'element')
-    }
-}
+
 export function parseHTML(html) {
+
+    let root = null // ast 语法书的树根
+    let currentParent; // 标示当前父亲是谁
+    let stack = []
+
+    // 常见数据结构 栈 队列 数组 链表 集合 hash表 树
+    function createASTElement(tagName, attrs) {
+        return {
+            tag: tagName,
+            type: ELEMENT_TYPE,
+            children: [],
+            attrs,
+            parent: null
+        }
+    }
+
+    function start(tagName, attrs) {
+
+        // console.log('标签是' + tagName + '属性是：' + attrs)
+        let element = createASTElement(tagName, attrs)
+
+        if (!root) {
+            root = element
+        }
+        currentParent = element // 吧当前元素标记为父 ast 树
+
+        stack.push(element) // 将开始标签存放到栈中
+
+    }
+
+    function end(endTag) {
+        // console.log('结束标签：', endTag)
+
+        const element = stack.pop()
+
+        currentParent = stack[stack.length - 1]
+        if (currentParent) {
+            element.parent = currentParent
+            currentParent.children.push(element)
+        }
+    }
+
+    function chars(text) {
+        // console.log('文本是', text)
+        text = text.replace(/\s/g, '')
+        if (text) {
+            currentParent.children.push({
+                text,
+                type: TEXT_TYPE
+            })
+        }
+    }
+
     while (html) {
         let textEnd = html.indexOf('<')
         if (textEnd == 0) {
@@ -73,7 +85,6 @@ export function parseHTML(html) {
         if (text) {
             advance(text.length)
             chars(text)
-            // console.log(html, 'html')
         }
     }
     function advance(n) {
@@ -98,5 +109,6 @@ export function parseHTML(html) {
             }
         }
     }
+
     return root;
 }
