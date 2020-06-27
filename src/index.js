@@ -29,7 +29,7 @@ let render1 = compileToFunction(`<div key="div" style="background: red;color: wh
     <li key="A" a="1" style="color: white">A1</li>
     <li key="B">B1</li>
     <li key="C">C1</li>
-    <li key="D">D1</li>
+    <li key="D">D</li>
 </div>`)
 let oldVnode = render1.call(vm1)
 
@@ -38,10 +38,10 @@ let realElement = createEle(oldVnode)
 document.body.appendChild(realElement)
 
 let render2 = compileToFunction(`<div key="div" style="background: yellow;" id="b" class="title" c="newc">
-    <li key="D">D2</li>
     <li key="C" class="c">C2</li>
-    <li key="B">B</li>
-    <li key="A" style="color:red">A2</li>
+    <li key="D">D</li>
+    <li key="M" style="color:red">M2</li>
+    <li key="E">E</li>
 </div>`)
 
 let newVnode = render2.call(vm2)

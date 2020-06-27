@@ -66,7 +66,23 @@ function  updateChildren(parent,oldChildren,newChildren){
     let newEndIndex = newChildren.length - 1 // 老元素结束索引
     let newEndVnode = newChildren[newEndIndex]  // 老元素结束
 
+    // 通过key来记住索引 描述节点的位置 [{ key: 'a' }, { key: 'b'}] --> {'A':1, 'B':2}
+    function makeIndexByKey(children){
+        let map = {}
+        children.forEach((item,index)=>{
+            map[item.key] = index
+        })
+        return map
+    }
+    let map = makeIndexByKey(oldChildren);
     while(oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex){
+        // 如果旧的节点有null空值旧跳过
+        if(!oldStartVnode){
+            oldStartVnode = oldChildren[++oldStartIndex]
+        }else if (!oldEndVnode){
+            oldEndVnode = oldChildren[--oldEndIndex]
+        }
+
         // 情境一、从头部开始比较 (后插入元素) ABCD-->ABCDE
         if(isSameVnode(oldStartVnode,newStartVnode)){
             patch(oldStartVnode, newStartVnode)
@@ -86,7 +102,29 @@ function  updateChildren(parent,oldChildren,newChildren){
             oldStartVnode = oldChildren[++oldStartIndex]
             newEndVnode = newChildren[--newEndIndex]
         }
+        // 情景四、尾移头
+        else if(isSameVnode(oldEndVnode, newStartVnode)){
+            patch(oldEndVnode, newStartVnode)
+            parent.insertBefore(oldEndVnode.el, oldStartVnode.el)
+            oldEndVnode = oldChildren[--oldEndIndex]
+            newStartVnode = newChildren[++newStartIndex]
+        }
+        // 情景五、乱序排列
+        else {
+            console.log(map, 'map');
+            let moveIndex = map[newStartVnode.key]
 
+            if (moveIndex == undefined) { // 没有null，说明是一个新元素，直接插入到前面
+                parent.insertBefore(createEle(newStartVnode),oldStartVnode.el)
+
+            } else {
+                let moveVnode = oldChildren[moveIndex]
+                oldChildren[moveIndex] = null // 防止移走后数组塌陷，用null占个位
+                patch(moveVnode, newStartVnode)
+                parent.insertBefore(moveVnode.el, oldStartVnode.el)
+            }
+            newStartVnode = newChildren[++newStartIndex]
+        }
     }
 
     if(newStartIndex <= newEndIndex){
@@ -97,6 +135,18 @@ function  updateChildren(parent,oldChildren,newChildren){
             parent.insertBefore(createEle(newChildren[i]),ele)
         }
     }
+
+    // 乱序对比时，如果新虚拟节点对比完成，老的元素多出来的真实节点就全部干掉
+    if(oldStartIndex <= oldEndIndex){
+        for(let i = oldStartIndex; i<=oldEndIndex; i++){
+            let child = oldChildren[i];
+            if(child != null){
+                parent.removeChild(child.el)
+            }
+        }
+    }
+    // 结论：尽量采用唯一的索引标示key，如果用索引，例如倒序，会采用索引来复用，不够准确，
+    // 本来根据diff算法移动就可以了 （如果是静态数据，用啥都可以）
 }
 
 export function createEle(vnode) { // 根据虚拟节点创建真实节点
