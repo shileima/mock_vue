@@ -37,7 +37,7 @@ let realElement = createEle(oldVnode)
 
 document.body.appendChild(realElement)
 
-let render2 = compileToFunction(`<div key="div" style="background: yellow;" id="b" class="title" c="newc">
+let render2 = compileToFunction(`<div key="div" style="background: grey;" id="b" class="title" c="newc">
     <li key="C" class="c">C2</li>
     <li key="D">D</li>
     <li key="M" style="color:red">M2</li>

@@ -26,24 +26,18 @@ export function parseHTML(html) {
     }
 
     function start(tagName, attrs) {
-
         // console.log('标签是' + tagName + '属性是：' + attrs)
         let element = createASTElement(tagName, attrs)
-
         if (!root) {
             root = element
         }
         currentParent = element // 吧当前元素标记为父 ast 树
-
         stack.push(element) // 将开始标签存放到栈中
-
     }
 
     function end(endTag) {
         // console.log('结束标签：', endTag)
-
         const element = stack.pop()
-
         currentParent = stack[stack.length - 1]
         if (currentParent) {
             element.parent = currentParent
