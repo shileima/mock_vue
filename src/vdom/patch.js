@@ -61,10 +61,10 @@ function  updateChildren(parent,oldChildren,newChildren){
     let oldEndIndex = oldChildren.length - 1 // 老元素结束索引
     let oldEndVnode = oldChildren[oldEndIndex]  // 老元素结束
 
-    let newStartIndex = 0 // 老元素开始索引
-    let newStartVnode = newChildren[0] // 老元素开始
-    let newEndIndex = newChildren.length - 1 // 老元素结束索引
-    let newEndVnode = newChildren[newEndIndex]  // 老元素结束
+    let newStartIndex = 0 // 新元素开始索引
+    let newStartVnode = newChildren[0] // 新元素开始
+    let newEndIndex = newChildren.length - 1 // 新元素结束索引
+    let newEndVnode = newChildren[newEndIndex]  // 新元素结束
 
     // 通过key来记住索引 描述节点的位置 [{ key: 'a' }, { key: 'b'}] --> {'A':1, 'B':2}
     function makeIndexByKey(children){
